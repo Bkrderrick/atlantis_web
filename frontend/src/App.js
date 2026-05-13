@@ -1,51 +1,43 @@
-import { useEffect } from "react";
-import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+import "./App.css";
 import axios from "axios";
 
 const API = "http://localhost:5001/api";
 
-const Home = () => {
-  const helloWorldApi = async () => {
+function App() {
+  const [items, setItems] = useState([]);
+
+  const fetchAtlantisData = async () => {
     try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
+      const response = await axios.get(`${API}/atlantis-data`);
+      console.log("Data fetched from Atlas:", response.data);
+      setItems(response.data);
     } catch (e) {
-      console.error(e, `errored out requesting / api`);
+      console.error("Error fetching from backend:", e);
     }
   };
 
   useEffect(() => {
-    helloWorldApi();
+    fetchAtlantisData();
   }, []);
 
   return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
-};
-
-function App() {
-  return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+    <div style={{ padding: "40px", backgroundColor: "#001f3f", color: "white", minHeight: "100vh" }}>
+      <h1>Atlantis Discovery Log</h1>
+      <hr />
+      <div style={{ display: "grid", gap: "20px", marginTop: "20px" }}>
+        {items.length > 0 ? (
+          items.map((item, index) => (
+            <div key={index} style={{ border: "1px solid #0074D9", padding: "15px", borderRadius: "8px" }}>
+              <h3>🔍 {item.name}</h3>
+              <p><strong>Type:</strong> {item.type}</p>
+              <p><strong>Status:</strong> {item.status}</p>
+            </div>
+          ))
+        ) : (
+          <p>Scanning the ocean floor for artifacts...</p>
+        )}
+      </div>
     </div>
   );
 }
