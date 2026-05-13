@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
 
-const API = "http://localhost:5001/api";
-
+const API_BASE = "https://atlantis-web.onrender.com/api";
 function App() {
   const [items, setItems] = useState([]);
 

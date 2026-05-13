@@ -105,7 +105,7 @@
                 submitBtn.disabled = true;
 
                 try {
-const res = await fetch("http://localhost:5001/api/contact", {                        method: "POST",
+const res = await fetch("https://atlantis-web.onrender.com/api/contact", {
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(data)
                     });
