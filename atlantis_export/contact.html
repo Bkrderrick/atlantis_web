@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Atlantis | Contact</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="styles/styles.css" rel="stylesheet">
+</head>
+<body>
+    <div id="wrapper">
+        <header>
+            <h1>Atlantis</h1>
+        </header>
+
+        <div class="content-row">
+            <div class="nav-column" aria-hidden="true"></div>
+
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="cave.html">Cave</a></li>
+                    <li><a href="sea.html">Sea</a></li>
+                    <li><a href="events.html">Weekend Events</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+
+            <main>
+                <h3>Contact form</h3>
+                <img src="images/logo.jpeg" alt="logo" class="responsive">
+
+                <!-- NOTE: this form posts to a /api/contact endpoint.
+                     For local validation only, that's fine.
+                     For a working email send, run the included backend
+                     (see /backend/README.md) or change the JS fetch URL. -->
+                <form id="contact-form" novalidate>
+                    <label for="Name">Name:</label>
+                    <input type="text" id="Name" name="Name" required>
+
+                    <label for="Number">Number:</label>
+                    <input type="tel" id="Number" name="Number">
+
+                    <label for="Email">E-mail:</label>
+                    <input type="email" id="Email" name="Email">
+
+                    <label for="flash-input">Questions:</label>
+                    <textarea id="flash-input" name="Questions" placeholder="Questions???"></textarea>
+
+                    <label for="focus-input">Request:</label>
+                    <textarea id="focus-input" name="Request" placeholder="Request..."></textarea>
+
+                    <div id="form-status" class="form-status" role="status" aria-live="polite"></div>
+
+                    <div class="button-container">
+                        <button type="reset">Restart</button>
+                        <button type="submit">Contact Us</button>
+                    </div>
+                </form>
+
+                <!-- Thank-you panel shown after a successful submission -->
+                <div id="thank-you" class="thank-you" hidden>
+                    <h2>Thank you Mrs. Boatman</h2>
+                    <p>WebDesign is LEGIT</p>
+                    <button type="button" id="thank-you-close">Send another message</button>
+                </div>
+            </main>
+        </div>
+
+        <footer>
+            Copyright &copy; 2026 Atlantis |
+            <a href="mailto:Derrick@Baker.com">Webmaster</a>
+        </footer>
+    </div>
+
+    <script src="styles/transition.js"></script>
+    <script>
+        (function () {
+            var form = document.getElementById("contact-form");
+            var statusEl = document.getElementById("form-status");
+            var thankYou = document.getElementById("thank-you");
+            var closeBtn = document.getElementById("thank-you-close");
+
+            // Backend endpoint. Same origin works when frontend is served
+            // by the FastAPI-proxied site; change to your server URL if
+            // hosting frontend separately.
+            var API_BASE = window.location.origin;
+
+            function setStatus(msg, kind) {
+                statusEl.textContent = msg || "";
+                statusEl.className = "form-status" + (kind ? " " + kind : "");
+            }
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+                var submitBtn = form.querySelector('button[type="submit"]');
+                var data = {
+                    name:      document.getElementById("Name").value.trim(),
+                    number:    document.getElementById("Number").value.trim(),
+                    email:     document.getElementById("Email").value.trim(),
+                    questions: document.getElementById("flash-input").value.trim(),
+                    request:   document.getElementById("focus-input").value.trim(),
+                    page:      window.location.pathname
+                };
+
+                if (!data.name) {
+                    setStatus("Please enter your name.", "error");
+                    document.getElementById("Name").focus();
+                    return;
+                }
+
+                setStatus("Sending your message...", "pending");
+                submitBtn.disabled = true;
+
+                fetch(API_BASE + "/api/contact", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                }).then(function (res) {
+                    if (!res.ok) {
+                        return res.text().then(function (t) {
+                            throw new Error("Server " + res.status + ": " + t);
+                        });
+                    }
+                    setStatus("", "");
+                    form.reset();
+                    thankYou.hidden = false;
+                    thankYou.scrollIntoView({ behavior: "smooth", block: "center" });
+                }).catch(function (err) {
+                    setStatus("Sorry, your message could not be sent. " + err.message, "error");
+                }).finally(function () {
+                    submitBtn.disabled = false;
+                });
+            });
+
+            closeBtn.addEventListener("click", function () {
+                thankYou.hidden = true;
+                setStatus("", "");
+                document.getElementById("Name").focus();
+            });
+        }());
+    </script>
+</body>
+</html>
