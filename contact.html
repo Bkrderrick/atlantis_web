@@ -17,11 +17,11 @@
 
             <nav>
                 <ul>
-                    <li><a href="/index.html">Home</a></li>
-                    <li><a href="/cave.html">Cave</a></li>
-                    <li><a href="/sea.html">Sea</a></li>
-                    <li><a href="/events.html">Weekend Events</a></li>
-                    <li><a href="/contact.html">Contact</a></li>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="cave.html">Cave</a></li>
+                    <li><a href="sea.html">Sea</a></li>
+                    <li><a href="events.html">Weekend Events</a></li>
+                    <li><a href="contact.html">Contact</a></li>
                 </ul>
             </nav>
 
@@ -65,7 +65,7 @@
         </footer>
     </div>
 
-    <script src="/styles/transition.js"></script>
+<script src="styles/transition.js"></script>
     <script>
         (function () {
             const form = document.getElementById("contact-form");
@@ -73,10 +73,8 @@
             const thankYou = document.getElementById("thank-you");
             const closeBtn = document.getElementById("thank-you-close");
 
-            // Resolve backend URL: in this Emergent preview, the same origin
-            // is routed to backend at /api/*; in plain local dev we can fall
-            // back to localhost:8001.
-            const API_BASE = window.location.origin;
+            // Hardcoded to your LIVE Render Backend so it works on any computer
+            const API_BASE = "https://atlantis-web.onrender.com";
 
             function setStatus(msg, kind) {
                 statusEl.textContent = msg || "";
@@ -105,6 +103,7 @@
                 submitBtn.disabled = true;
 
                 try {
+                    // This explicitly hits your Render server
                     const res = await fetch(API_BASE + "/api/contact", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -120,7 +119,7 @@
                     thankYou.hidden = false;
                     thankYou.scrollIntoView({ behavior: "smooth", block: "center" });
                 } catch (err) {
-                    setStatus("Sorry — your message could not be sent. Please try again. (" + err.message + ")", "error");
+                    setStatus("Sorry — your message could not be sent. (" + err.message + ")", "error");
                 } finally {
                     submitBtn.disabled = false;
                 }
