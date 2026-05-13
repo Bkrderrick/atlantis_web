@@ -111,7 +111,7 @@
                 setStatus("Sending your message...", "pending");
                 submitBtn.disabled = true;
 
-                fetch(API_BASE + "/api/contact", {
+             fetch("https://atlantis-web.onrender.com/api/contact", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(data)
@@ -121,6 +121,13 @@
                             throw new Error("Server " + res.status + ": " + t);
                         });
                     }
+                    setStatus("Success! Your message was sent.", "success");
+                    form.reset();
+                    thankYou.hidden = false;
+                    thankYou.scrollIntoView({ behavior: "smooth", block: "center" });
+                }).catch(function (err) {
+                    setStatus("Sorry, your message could not be sent. " + err.message, "error");
+                })
                     setStatus("", "");
                     form.reset();
                     thankYou.hidden = false;
