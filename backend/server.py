@@ -21,7 +21,17 @@ def get_data():
 def contact():
     try:
         data = request.json
-        print(f"New message from {data.get('name')}: {data.get('request')}")
+# This saves the data to your 'messages' collection in MongoDB
+        db['messages'].insert_one(data)
+        
+        return jsonify({"message": "Message received by the Great Library of Atlantis!"}), 201
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
+    # Render needs the host set to 0.0.0.0
+    app.run(host='0.0.0.0', port=5001, debug=True)
         
         # This saves the message to a new collection in your ClusterAtlantis
         messages_collection = db['messages']
