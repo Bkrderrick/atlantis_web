@@ -4,7 +4,7 @@ from database import get_db
 import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "https://atlantis-bnb-dbaker.netlify.app"}})
 
 db = get_db()
 
