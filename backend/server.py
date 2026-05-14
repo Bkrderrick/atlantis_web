@@ -17,6 +17,15 @@ def get_data():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/contact', methods=['GET'])
+def get_messages():
+    try:
+        collection = db['messages']
+        data = list(collection.find({}, {'_id': 0}))
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/api/contact', methods=['POST'], strict_slashes=False)
 def contact():
     try:
