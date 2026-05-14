@@ -17,7 +17,7 @@ def get_data():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/contact', methods=['POST'])
+@app.route('/api/contact', methods=['POST'], strict_slashes=False)
 def contact():
     try:
         data = request.json
